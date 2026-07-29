@@ -1,0 +1,28 @@
+import Flutter
+import UIKit
+import CoreTelephony
+
+public class DeviceRegionPlugin: NSObject, FlutterPlugin {
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        let channel = FlutterMethodChannel(name: "device_region", binaryMessenger: registrar.messenger())
+        let instance = DeviceRegionPlugin()
+        registrar.addMethodCallDelegate(instance, channel: channel)
+    }
+
+    public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if call.method == "getSIMCountryCode" {
+            if #available(iOS 16.0, *) {
+                let countryCode = Locale.current.region?.identifier ?? nil
+                result(countryCode)
+            } else if #available(iOS 12.0, *) {
+                let networkProviders = CTTelephonyNetworkInfo().serviceSubscriberCellularProviders
+                let countryCode = networkProviders?.first?.value.isoCountryCode ?? nil
+                result(countryCode)
+            } else {
+                result(nil)
+            }
+        } else {
+            result(FlutterMethodNotImplemented)
+        }
+    }
+}
