@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "device_region",
     platforms: [
-        .iOS("13.0")
+        .iOS("11.0")
     ],
     products: [
         .library(name: "device-region", targets: ["device_region"])
